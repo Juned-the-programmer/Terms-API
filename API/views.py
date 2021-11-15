@@ -27,10 +27,10 @@ def text_extract(request):
     if serializer.is_valid():   
         serializer.save()
 
-    # image = Image_to_Text.objects.all().last().image
-    # image_path = image.path
+    image = Image_to_Text.objects.all().last().image
+    image_path = image.path
 
-    # Extracted_Text = pytesseract.image_to_string(image_path)
+    Extracted_Text = pytesseract.image_to_string(image_path)
 
     return JsonResponse(Extracted_Text , safe=False)
     # return Response(serializer.data)
