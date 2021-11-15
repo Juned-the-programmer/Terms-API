@@ -23,7 +23,7 @@ def list_api(request):
 def text_extract(request):
 
     serializer = ImageSerializer(data=request.data)
-    
+
     if serializer.is_valid():   
         serializer.save()
 
@@ -32,8 +32,8 @@ def text_extract(request):
 
     # Extracted_Text = pytesseract.image_to_string(image_path)
 
-    # return JsonResponse(Extracted_Text , safe=False)
-    return Response(serializer.data)
+    return JsonResponse(Extracted_Text , safe=False)
+    # return Response(serializer.data)
 
 @api_view(['POST'])
 def text_process(request):
