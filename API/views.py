@@ -7,7 +7,6 @@ from rest_framework.response import Response
 
 from .serializer import ImageSerializer
 
-import cv2 
 import pytesseract
 
 import pandas as pd
