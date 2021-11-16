@@ -23,14 +23,14 @@ def list_api(request):
 def text_extract(request):
 
     image_data = request.data
+    
+    serializer = ImageSerializer(data=request.data)
 
-    # serializer = ImageSerializer(data=request.data)
+    if serializer.is_valid():   
+        serializer.save()
 
-    # if serializer.is_valid():   
-        # serializer.save()
-
-    # image = Image_to_Text.objects.all().last().image
-    image_path = image_data.path
+    image = Image_to_Text.objects.all().last().image
+    image_path = image.path
 
     Extracted_Text = pytesseract.image_to_string(image_path)
 
