@@ -22,7 +22,10 @@ def list_api(request):
 @api_view(['POST'])
 def text_extract(request):
 
+    print(request)
+    
     image_data = request.data
+    print(image_data)
     
     serializer = ImageSerializer(data=request.data)
 
