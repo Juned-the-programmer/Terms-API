@@ -14,6 +14,7 @@ import re
 import string
 
 import pickle
+import cv2
 # Create your views here.
 @api_view(['GET'])
 def list_api(request):
@@ -22,18 +23,26 @@ def list_api(request):
 @api_view(['POST'])
 def text_extract(request):
 
-    print(request)
-    
     image_data = request.data
+    
     print(image_data)
     
-    serializer = ImageSerializer(data=request.data)
+    serializer = ImageSerializer(data=image_data)
 
-    if serializer.is_valid():   
+    if serializer.is_valid():  
         serializer.save()
 
     image = Image_to_Text.objects.all().last().image
     image_path = image.path
+
+    image_gray = cv2.imread(image_path)
+
+    gray_image = cv2.cvtColor(image_gray , cv2.COLOR_BGR2GRAY)
+
+    ret, th = cv2.threshold(gray_image ,
+        127,  # threshold value
+        255,  # maximum value assigned to pixel values exceeding the threshold
+        cv2.THRESH_BINARY) 
 
     Extracted_Text = pytesseract.image_to_string(image_path)
 
