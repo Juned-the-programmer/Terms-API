@@ -44,7 +44,7 @@ def text_extract(request):
         255,  # maximum value assigned to pixel values exceeding the threshold
         cv2.THRESH_BINARY) 
 
-    Extracted_Text = pytesseract.image_to_string(image_path)
+    Extracted_Text = pytesseract.image_to_string(th)
 
     return JsonResponse(Extracted_Text , safe=False)
     # return Response(serializer.data)
