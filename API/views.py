@@ -45,6 +45,7 @@ def text_extract(request):
         cv2.THRESH_BINARY) 
 
     Extracted_Text = pytesseract.image_to_string(th)
+    print(Extracted_Text)
 
     return JsonResponse(Extracted_Text , safe=False)
     # return Response(serializer.data)
