@@ -35,8 +35,10 @@ def text_extract(request):
     image = Image_to_Text.objects.all().last().image
     image_path = image.path
 
-    image_gray = cv2.imread(image_path)
+    print(image_path)
 
+    image_gray = cv2.imread(image_path)
+    
     gray_image = cv2.cvtColor(image_gray , cv2.COLOR_BGR2GRAY)
 
     ret, th = cv2.threshold(gray_image ,
