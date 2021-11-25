@@ -39,9 +39,9 @@ def text_extract(request):
 
     image_gray = cv2.imread(image_path)
     
-    gray_image = cv2.cvtColor(image_gray , cv2.COLOR_BGR2GRAY)
+    # gray_image = cv2.cvtColor(image_gray , cv2.COLOR_BGR2GRAY)
 
-    ret, th = cv2.threshold(gray_image ,
+    ret, th = cv2.threshold(image_gray ,
         127,  # threshold value
         255,  # maximum value assigned to pixel values exceeding the threshold
         cv2.THRESH_BINARY) 
