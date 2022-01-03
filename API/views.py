@@ -15,6 +15,10 @@ import string
 
 import pickle
 import cv2
+
+import nltk
+# nltk.download('punkt')
+from nltk.tokenize import sent_tokenize
 # Create your views here.
 @api_view(['GET'])
 def list_api(request):
@@ -55,8 +59,8 @@ def text_extract(request):
 @api_view(['POST'])
 def text_process(request):
 
-    news = str(request.data['news'])
-    print(news)
+    terms = str(request.data['terms'])
+    print(terms)
 
     saved_db = pickle.load(open("model_db.sav" , 'rb'))
     saved_adb = pickle.load(open("model_adb.sav" , 'rb'))
@@ -84,32 +88,44 @@ def text_process(request):
 
     def output_label(n):
         if n == 0:
-            return "Fake News"
+            return "Not Against the customer"
         elif n == 1:
-            return "Not A Fake News"
+            return "Against the customer"
 
-    def manual_testing(news):
-        testing_news = {"text":[news]}
-        print(testing_news)
-        new_def_test = pd.DataFrame(testing_news)
-        print(new_def_test)
-        new_def_test["text"] = new_def_test["text"].apply(wordopt)
-        new_x_test = new_def_test["text"]
-        new_xv_test = saved_vectors.transform(new_x_test)
-        pred_DT = saved_db.predict(new_xv_test)
-        pred_ADB = saved_adb.predict(new_xv_test)
-        pred_GBC = saved_GBC.predict(new_xv_test)
-        pred_LR = saved_LR.predict(new_xv_test)
-        pred_RFC = saved_RFC.predict(new_xv_test)
-        pred_SVM = saved_svm.predict(new_xv_test)
+    def manual_testing(terms):
+        # testing_news = {"text":[terms]}
+        # print(testing_news)
+        # new_def_test = pd.DataFrame(testing_news)
+        # print(new_def_test)
+        # new_def_test["text"] = new_def_test["text"].apply(wordopt)
+        # new_x_test = new_def_test["text"]
+        new_x_test = sent_tokenize(terms)
+        
+        for i in new_x_test:
+            terms = wordopt(i)
+            terms = [terms]
+            new_xv_test = saved_vectors.transform(terms)
+            pred_DT = saved_db.predict(new_xv_test)
+            pred_ADB = saved_adb.predict(new_xv_test)
+            pred_GBC = saved_GBC.predict(new_xv_test)
+            pred_LR = saved_LR.predict(new_xv_test)
+            pred_RFC = saved_RFC.predict(new_xv_test)
+            pred_SVM = saved_svm.predict(new_xv_test)
 
-        return print("\n\n DT Prediction : {}\n ADB Prediction : {}\n GBC Prediction : {}\n LR Prediction : {}\n RFC Prediction : {}\n SVM Prediction : {} ".format(output_label(pred_DT[0]),
-                                                                                                                                                                    output_label(pred_ADB[0]),
-                                                                                                                                                                    output_label(pred_GBC[0]),
-                                                                                                                                                                    output_label(pred_LR[0]),
-                                                                                                                                                                    output_label(pred_RFC[0]),
-                                                                                                                                                                    output_label(pred_SVM[0])))
+            if pred_DT == 1:
+                return i
+            else:
+                return "Nothing"
 
-    manual_testing(news)
+        # return predicted_model
 
-    return JsonResponse("Terms and conditions text Process" , safe=False)
+        # return print("\n\n DT Prediction : {}\n ADB Prediction : {}\n GBC Prediction : {}\n LR Prediction : {}\n RFC Prediction : {}\n SVM Prediction : {} ".format(output_label(pred_DT[0]),
+        #                                                                                                                                                             output_label(pred_ADB[0]),
+        #                                                                                                                                                             output_label(pred_GBC[0]),
+        #                                                                                                                                                             output_label(pred_LR[0]),
+        #                                                                                                                                                             output_label(pred_RFC[0]),
+        #                                                                                                                                                             output_label(pred_SVM[0])))
+
+    manual_testing(terms)
+
+    return JsonResponse(manual_testing(terms) , safe=False)
